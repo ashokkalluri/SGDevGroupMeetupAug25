@@ -1,0 +1,72 @@
+<template>
+    <div class="slds-box slds-card">
+        <lightning-combobox
+            name="objectPicker"
+            label="Select Object"
+            value={value}
+            options={options}
+            onchange={handleChange}
+            placeholder="Select an object...">
+        </lightning-combobox>
+        <template if:true={fieldOptions.length}>
+            <lightning-dual-listbox
+                name="fieldPicker"
+                label="Select Fields"
+                source-label="Available Fields"
+                selected-label="Selected Fields"
+                options={fieldOptions}
+                value={selectedFields}
+                onchange={handleFieldChange}
+                required
+                multiple>
+            </lightning-dual-listbox>
+        </template>
+
+        <!-- Filter Table -->
+        <template if:true={showFilterTable}>
+            <div class="slds-box slds-m-top_medium">
+                <h3 class="slds-text-heading_small">Filter</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <tbody>
+                        <template for:each={filterFields} for:item="field">
+                            <tr key={field.apiName}>
+                                <td>{field.label}</td>
+                                <td>
+                                    <lightning-input type="text" data-api-name={field.apiName} onchange={handleFilterInput}></lightning-input>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+                <div class="slds-m-top_small">
+                    <lightning-button label="Search" onclick={handleSearch} variant="brand"></lightning-button>
+                </div>
+            </div>
+        </template>
+
+        <!-- Results Table -->
+        <template if:true={tableRows.length}>
+            <div class="slds-box slds-m-top_medium">
+                <h3 class="slds-text-heading_small">Results</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <template for:each={filterFields} for:item="field">
+                                <th key={field.apiName}>{field.label}</th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={tableRows} for:item="row">
+                            <tr key={row.id}>
+                                <template for:each={row.values} for:item="cell" for:index="index">
+                                    <td key={cell}>{cell}</td>
+                                </template>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </div>
+</template>
